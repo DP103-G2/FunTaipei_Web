@@ -21,5 +21,4 @@ public class Good {
 		this.mb_no = mb_no;
 	}
 	
-
 }
