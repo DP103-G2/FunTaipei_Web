@@ -1,18 +1,36 @@
 package dp103.gp2.server.group.TravelDetail;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TravelDetail {
+public class TravelDetail implements Serializable{
 	
 	private int travel_id;
 	private int pc_id;
+	
 	private String pc_name;
+
 	public TravelDetail(int travel_id, int pc_id, String pc_name) {
 		super();
 		this.travel_id = travel_id;
 		this.pc_id = pc_id;
 		this.pc_name = pc_name;
+		
 	}
+	
+	public TravelDetail(int pc_id, String pc_name) {
+		super();
+		this.pc_id = pc_id;
+		this.pc_name = pc_name;
+	}
+	
+	public TravelDetail(int travel_id, int pc_id) {
+		super();
+		this.travel_id = travel_id;
+		this.pc_id = pc_id;
+	}
+
+
 	public int getTravel_id() {
 		return travel_id;
 	}
@@ -31,9 +49,5 @@ public class TravelDetail {
 	public void setPc_name(String pc_name) {
 		this.pc_name = pc_name;
 	}
-	
-
-	
-	
 
 }

@@ -31,7 +31,7 @@ public class GroupServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
 		//Gson gson = new Gson();
 		BufferedReader br = request.getReader();
 		StringBuilder jsonIn = new StringBuilder();
@@ -87,7 +87,27 @@ public class GroupServlet extends HttpServlet {
 			int id = jsonObject.get("id").getAsInt();
 			Group group = groupDao.findById(id);
 			writeText(response, gson.toJson(group));
-		}else {
+		} else if (action.equals("doing")) {
+			int id = jsonObject.get("id").getAsInt();
+			List<Group> groups = groupDao.findByMbNo(id);
+			writeText(response, gson.toJson(groups));
+		} else if (action.equals("end")) {
+			int id = jsonObject.get("id").getAsInt();
+			List<Group> groups = groupDao.findEndGroup(id);
+			writeText(response, gson.toJson(groups));
+		} else if (action.equals("master")) {
+			int id = jsonObject.get("id").getAsInt();
+			List<Group> groups = groupDao.findMaster(id);
+			writeText(response, gson.toJson(groups));
+		} else if (action.equals("findFinish")) {
+			int id = jsonObject.get("id").getAsInt();
+			List<Group> groups = groupDao.findFinish(id);
+			writeText(response, gson.toJson(groups));
+		} else if (action.equals("delete")){
+			int id = jsonObject.get("id").getAsInt();
+			int count = groupDao.delete(id);
+			writeText(response, String.valueOf(count));
+		} else {
 			writeText(response, "");
 		}
 	}
@@ -96,7 +116,6 @@ public class GroupServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-
 		System.out.println("output: " + outText);
 	}
 
@@ -106,8 +125,8 @@ public class GroupServlet extends HttpServlet {
 			groupDao = new GroupDaoSqlImpl();
 		}
 		List<Group> groups = groupDao.getAll();
-		writeText(response, new Gson().toJson(groups));
-		writeText(response, new GsonBuilder().setDateFormat("yyyy/MM/dd").create().toJson(groups));
+//		writeText(response, new Gson().toJson(groups));
+		writeText(response, new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create().toJson(groups));
 
 	}
 

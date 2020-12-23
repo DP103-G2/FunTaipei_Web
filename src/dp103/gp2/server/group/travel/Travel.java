@@ -1,19 +1,48 @@
 package dp103.gp2.server.group.travel;
 
-public class Travel {
+import java.io.Serializable;
+
+public class Travel implements Serializable{
 	private int travel_id;
 	private String travel_name;
 	private byte[] image;
 	private int travel_status;
+	private int mb_no;
 	
 	
-	
-	public Travel(int travel_id, String travel_name, byte[] image, int travel_status) {
+	public Travel(int travel_id, String travel_name, byte[] image, int travel_status, int mb_no) {
 		super();
 		this.travel_id = travel_id;
 		this.travel_name = travel_name;
 		this.image = image;
 		this.travel_status = travel_status;
+		this.mb_no = mb_no;
+	}
+	
+	public Travel(int travel_id, String travel_name, int travel_status, int mb_no) {
+		super();
+		this.travel_id = travel_id;
+		this.travel_name = travel_name;
+		this.travel_status = travel_status;
+		this.mb_no = mb_no;
+	}
+	public Travel(int travel_id, String travel_name, int travel_status) {
+		super();
+		this.travel_id = travel_id;
+		this.travel_name = travel_name;
+		this.travel_status = travel_status;
+	}
+	public Travel(int mb_no, int travel_id, String travel_name) {
+		super();
+		this.mb_no = mb_no;
+		this.travel_id = travel_id;
+		this.travel_name = travel_name;
+		
+	}
+	public Travel(int travel_id, String travel_name) {
+		this.travel_id = travel_id;
+		this.travel_name = travel_name;
+		
 	}
 	public int getTravel_id() {
 		return travel_id;
@@ -39,6 +68,13 @@ public class Travel {
 	public void setTravel_status(int travel_status) {
 		this.travel_status = travel_status;
 	}
+	public int getMb_no() {
+		return mb_no;
+	}
+	public void setMb_no(int mb_no) {
+		this.mb_no = mb_no;
+	}
+	
 	
 	
 }

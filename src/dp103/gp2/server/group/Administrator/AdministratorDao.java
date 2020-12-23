@@ -6,11 +6,7 @@ public interface AdministratorDao {
 	
 	int insert(Administrator administrator);
 	
-	int update(Administrator administrator);
-	
-	int delete(int AD_ID);
-	
-	Administrator findById(int AD_ID);
+	boolean login(String AD_NO, String AD_PASSWORD);
 	
 	List<Administrator> getAll();
 }

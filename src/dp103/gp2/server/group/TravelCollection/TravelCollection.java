@@ -4,34 +4,56 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class TravelCollection {
-	
+	//這些給Collection首頁用
 	private int mb_no;
 	private int travel_id;
 	private String mb_email;
 	private String mb_name;
-	private int gp_id;
-	private String gp_name;
-	private Timestamp GP_DATESTART, GP_DATEEND, GP_EVENTDATE;
-	public TravelCollection(int mb_no, int travel_id, String mb_email, String mb_name, int gp_id, String gp_name, Date gP_DATESTART,
-			Date gP_DATEEND, Date gP_EVENTDATE) {
+	private String travel_name;
+	//這些給Detail用
+	private int pc_id;
+	private String pc_name;
+	//首頁用
+	public TravelCollection(int mb_no, int travel_id, String mb_email, String mb_name, String travel_name) {
 		super();
 		this.mb_no = mb_no;
 		this.travel_id = travel_id;
 		this.mb_email = mb_email;
 		this.mb_name = mb_name;
-		this.gp_id = gp_id;
-		this.gp_name = gp_name;
-		GP_DATESTART = (Timestamp) gP_DATESTART;
-		GP_DATEEND = (Timestamp) gP_DATEEND;
-		GP_EVENTDATE = (Timestamp) gP_EVENTDATE;
+		this.travel_name = travel_name;
 	}
+	//Detail使用
+	public TravelCollection(int travel_id, int pc_id, String pc_name) {
+		this.travel_id = travel_id;
+		this.pc_id = pc_id;
+		this.pc_name = pc_name;
+	}
+	//忘了
+	public TravelCollection(int mb_no, int travel_id) {
+		this.mb_no = mb_no;
+		this.travel_id = travel_id;
+	}
+	
+	//Get and Set區塊
+	
 	public int getMb_no() {
 		return mb_no;
+	}
+	public int getPc_id() {
+		return pc_id;
+	}
+	public void setPc_id(int pc_id) {
+		this.pc_id = pc_id;
+	}
+	public String getPc_name() {
+		return pc_name;
+	}
+	public void setPc_name(String pc_name) {
+		this.pc_name = pc_name;
 	}
 	public void setMb_no(int mb_no) {
 		this.mb_no = mb_no;
 	}
-	
 	public int getTravel_id() {
 		return travel_id;
 	}
@@ -50,36 +72,14 @@ public class TravelCollection {
 	public void setMb_name(String mb_name) {
 		this.mb_name = mb_name;
 	}
-	public int getGp_id() {
-		return gp_id;
+	public String getTravel_name() {
+		return travel_name;
 	}
-	public void setGp_id(int gp_id) {
-		this.gp_id = gp_id;
+	public void setTravel_name(String travel_name) {
+		this.travel_name = travel_name;
 	}
-	public String getGp_name() {
-		return gp_name;
-	}
-	public void setGp_name(String gp_name) {
-		this.gp_name = gp_name;
-	}
-	public Date getGP_DATESTART() {
-		return GP_DATESTART;
-	}
-	public void setGP_DATESTART(Date gP_DATESTART) {
-		GP_DATESTART = (Timestamp) gP_DATESTART;
-	}
-	public Date getGP_DATEEND() {
-		return GP_DATEEND;
-	}
-	public void setGP_DATEEND(Date gP_DATEEND) {
-		GP_DATEEND = (Timestamp) gP_DATEEND;
-	}
-	public Date getGP_EVENTDATE() {
-		return GP_EVENTDATE;
-	}
-	public void setGP_EVENTDATE(Date gP_EVENTDATE) {
-		GP_EVENTDATE = (Timestamp) gP_EVENTDATE;
-	}
+	
+
 	
 	
 	

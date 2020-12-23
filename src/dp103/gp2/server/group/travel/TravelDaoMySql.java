@@ -22,17 +22,19 @@ public class TravelDaoMySql implements TravelDao{
 			e.printStackTrace();
 		}
 	}
-
+	//0221會員管理行程用新增可以直接新增到TravelList
 	@Override
 	public int insert(Travel travel, byte[] image) {
 		int count = 0;
-		String sql = "INSERT INTO TRAVEL (TRAVEL_NAME, TRAVEL_STATUS) " + "  VALUE(?, '1');";
+		String sql = "INSERT INTO TRAVEL " + "(TRAVEL_NAME ,IMAGE, TRAVEL_STATUS, MB_NO) " + "VALUE(?, ?, '1', '33');";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, travel.getTravel_name());
+			ps.setBytes(2, image);
+			
 			count = ps.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -50,7 +52,7 @@ public class TravelDaoMySql implements TravelDao{
 		}
 		return count;
 	}
-
+	//更新
 	@Override
 	public int update(Travel travel, byte[] image) {
 		int count = 0;
@@ -82,7 +84,7 @@ public class TravelDaoMySql implements TravelDao{
 			}
 			return count;
 		}
-	
+	//刪除
 	@Override
 	public int delete(int travel_id) {
 		int count = 0;
@@ -113,7 +115,7 @@ public class TravelDaoMySql implements TravelDao{
 
 	@Override
 	public Travel findById(int travel_id) {
-		String sql = "SELECT  TRAVEL_NAME,IMAGE FROM TRAVEL WHERE TRAVEL.TRAVEL_ID = ? ;";
+		String sql = "SELECT TRAVEL_NAME FROM FunTaipei.TRAVEL WHERE TRAVEL_ID = ? ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		Travel travel = null;
@@ -123,10 +125,8 @@ public class TravelDaoMySql implements TravelDao{
 			ps.setInt(1, travel_id);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				String travel_name = rs.getString(2);
-				byte[] image = rs.getBytes(3);
-				int travel_status = rs.getInt(4);
-				Travel travels = new Travel(travel_id , travel_name, image, travel_status);
+				String travel_name = rs.getString(1);
+				travel = new Travel(travel_id , travel_name);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -159,7 +159,7 @@ public class TravelDaoMySql implements TravelDao{
 				int travel_id = rs.getInt(1);
 				String travel_name = rs.getString(2);
 				int travel_status = rs.getInt(3);
-				Travel travel = new Travel(travel_id, travel_name, null, travel_status);
+				Travel travel = new Travel(travel_id, travel_name, travel_status);
 				travelList.add(travel);
 			}
 		return travelList;
@@ -182,7 +182,7 @@ public class TravelDaoMySql implements TravelDao{
 
 	@Override
 	public byte[] getImage(int travel_id) {
-		String sql = "SELECT image FROM Travel WHERE Travel_id = ?;";
+		String sql = "SELECT IMAGE FROM Travel WHERE Travel_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		byte[] image = null;
@@ -210,4 +210,78 @@ public class TravelDaoMySql implements TravelDao{
 		}
 		return image;
 	}
+	@Override
+	public List<Travel> findBymemId(int memId) {
+		String sql = "SELECT TRAVEL_ID, TRAVEL_NAME, IMAGE " + 
+					 "FROM Travel " + 
+					 "WHERE MB_NO = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<Travel> travelList = new ArrayList<Travel>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, memId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int travel_id = rs.getInt(1);
+				String travel_name = rs.getString(2);
+				Travel travel = new Travel(memId,travel_id, travel_name);
+				travelList.add(travel);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(ps != null) {
+					ps.close();
+				}
+				if(connection != null) {
+					connection.close();
+				}
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return travelList;
+	}
+	@Override
+	public Travel findByGroup(int id) {
+		String sql = "SELECT travel_id, travel_name, travel_status, mb_no FROM FunTaipei.TRAVEL WHERE TRAVEL.TRAVEL_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		Travel travel = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				int travel_id = rs.getInt(1);
+				String travel_name = rs.getString(2);
+				int travel_status = rs.getInt(3);
+				int mb_no = rs.getInt(4);
+				travel = new Travel(travel_id, travel_name, travel_status, mb_no);
+				
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(ps != null) {
+					ps.close();
+				}
+				if(connection != null) {
+					connection.close();
+				}
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return travel;
+	}
+	
+
+	
 }

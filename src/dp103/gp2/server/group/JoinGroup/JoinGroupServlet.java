@@ -2,6 +2,7 @@ package dp103.gp2.server.group.JoinGroup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -14,10 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import dp103.gp2.server.group.Common.ImageUtil;
+
 @SuppressWarnings("serial")
 @WebServlet("/JoinGroupServlet")
 public class JoinGroupServlet extends HttpServlet {
-	private final static String CONTENT_TYPE = "text/html; charest=utf8";
+	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	JoinGroupDao jgDao = null;
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,7 +32,7 @@ public class JoinGroupServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.print("input: " + jsonIn);
+		System.out.println("input: " + jsonIn);
 		
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (jgDao == null) {
@@ -41,8 +44,22 @@ public class JoinGroupServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<JoinGroup> jgs = jgDao.getAll();
 			writeText(response, gson.toJson(jgs));
-		} else if (action.equals("jgInsert") || action.equals("jgUpdate")) {
-			String jgJson = jsonObject.get("jgs").getAsString();
+		} else if (action.equals("getImage")) {
+			OutputStream os = response.getOutputStream();
+			int id = jsonObject.get("id").getAsInt();
+			int imageSize = jsonObject.get("imageSize").getAsInt();
+			byte[] image = jgDao.getImage(id);
+			if (image != null) {
+				image = ImageUtil.shrink(image, imageSize);
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+				os.write(image);
+			}
+			
+		}
+		
+			else if (action.equals("jgInsert") || action.equals("jgUpdate")) {
+			String jgJson = jsonObject.get("jg").getAsString();
 			System.out.println("jgJson = " + jgJson);
 			JoinGroup jg = gson.fromJson(jgJson, JoinGroup.class);
 			int count = 0;
@@ -56,6 +73,23 @@ public class JoinGroupServlet extends HttpServlet {
 			int id = jsonObject.get("id").getAsInt();
 			JoinGroup jg = jgDao.findById(id);
 			writeText(response, gson.toJson(jg));
+		}  else if(action.equals("findMember")) {
+			int id = jsonObject.get("id").getAsInt();
+			List<JoinGroup> joinGroups = jgDao.findMember(id);
+			writeText(response, gson.toJson(joinGroups));
+		} else if (action.equals("findByMb")) {
+			int mb = jsonObject.get("mb").getAsInt();
+			int gp = jsonObject.get("gp").getAsInt();
+			JoinGroup jg = jgDao.findByMb(mb, gp);
+			writeText(response, gson.toJson(jg));
+			
+		} else if (action.equals("delete")) {
+			int mb = jsonObject.get("mb").getAsInt();
+			int gp = jsonObject.get("gp").getAsInt();
+			int count = jgDao.delete(mb, gp);
+			writeText(response, String.valueOf(count));
+			
+			
 		} else {
 			writeText(response, "");
 		}

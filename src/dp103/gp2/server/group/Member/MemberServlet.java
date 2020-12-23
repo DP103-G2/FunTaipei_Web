@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dp103.gp2.server.group.Common.ImageUtil;
@@ -25,6 +26,7 @@ import dp103.gp2.server.group.Common.ImageUtil;
 public class MemberServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset = utf-8";
 	MemberDao memberDao = null;
+	private JsonElement mb_mail;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
@@ -36,7 +38,8 @@ public class MemberServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println(jsonIn.toString());
+		System.out.println("input: " + jsonIn.toString());
+		
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (memberDao == null) {
 			memberDao = new MemberDaoMySql();
@@ -47,9 +50,9 @@ public class MemberServlet extends HttpServlet {
 			writeText(response, gson.toJson(members));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
-			int Mb_no = jsonObject.get("imageSize").getAsInt();
+			int id = jsonObject.get("id").getAsInt();
 			int imageSize = jsonObject.get("imageSize").getAsInt();
-			byte[] image = memberDao.getImage(Mb_no);
+			byte[] image = memberDao.getImage(id);
 			if (image != null) {
 				image = ImageUtil.shrink(image, imageSize);
 				response.setContentType("image/jpeg");
@@ -61,6 +64,7 @@ public class MemberServlet extends HttpServlet {
 			System.out.println("memberJson = " + memberJson);
 			Member member = gson.fromJson(memberJson, Member.class);
 			byte[] image = null;
+			//檢查是否上傳照片
 			if (jsonObject.get("imageBase64") != null) {
 				String imageBase64 = jsonObject.get("imageBase64").getAsString();
 				if (imageBase64 != null && !imageBase64.isEmpty()) {
@@ -74,18 +78,33 @@ public class MemberServlet extends HttpServlet {
 				count = memberDao.update(member, image);
 			}
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("findById")) {
-			int mb_no = jsonObject.get("mb_no").getAsInt();
-			Member member = memberDao.findById(mb_no);
-			writeText(response, gson.toJson(member));
-		} else if (action.equals("login")) {
+		} else if (action.equals("login")) {//判斷登入
 			String email = jsonObject.get("email").getAsString();
 			String password = jsonObject.get("password").getAsString();
 			boolean isValid = memberDao.login(email, password);
 			writeText(response, String.valueOf(isValid));
-		} else {
+		} 
+		
+		else if (action.equals("getUserIdByEmail")) {
+			int mb_no = 0;
+			String email = jsonObject.get("email").getAsString();
+			mb_no = memberDao.getUserIdByEmail(email);
+			writeText(response, String.valueOf(mb_no));
+		}
+		//登入：回傳資料
+		else if (action.equals("findById")) {
+			int mb_no = jsonObject.get("id").getAsInt();
+			Member member = memberDao.findById(mb_no);
+			writeText(response, gson.toJson(member));
+			
+//		}else if (action.equals("searchUser")) {
+//			String email = jsonObject.get("email").getAsString();
+//			Member member = memberDao.searchUser(mb_mail);
+//			writeText(response, gson.toJson(member));
+		}else {
 			writeText(response, "");
 		}
+		
 
 	}
 

@@ -1,26 +1,37 @@
 package dp103.gp2.server.group.JoinGroup;
 
-public class JoinGroup {
+import java.io.Serializable;
 
-	private int GP_ID, MB_NO, CHECK_IN, GP_ENROLLMENT;
+public class JoinGroup implements Serializable{
+
+	private int GP_ID, MB_NO, CHECK_IN, MASTER;
+	private String MB_NAME;
 	
 	
-
-	public JoinGroup(int gP_ID, int mB_NO, int cHECK_NO, int gP_ENROLLMENT) {
+	
+	
+	public JoinGroup (int mB_NO, String mB_NAME, int cHECK_IN) {
 		super();
-		this.GP_ID = gP_ID;
 		this.MB_NO = mB_NO;
-		this.CHECK_IN = cHECK_NO;
-		this.GP_ENROLLMENT = gP_ENROLLMENT;
+		this.MB_NAME = mB_NAME;
+		this.CHECK_IN = cHECK_IN;
 	}
 	
-	public JoinGroup(int gP_ID, int mB_NO, int cHECK_NO) {
-		this.GP_ID = gP_ID;
-		this.MB_NO = mB_NO;
-		this.CHECK_IN = cHECK_NO;
-		
+	
+	public JoinGroup(int gP_ID, int mB_NO, int cHECK_in, int mASTER) {
+        super();
+        this.GP_ID = gP_ID;
+        this.MB_NO = mB_NO;
+        this.CHECK_IN = cHECK_in;
+        this.MASTER = mASTER;
+        
+    }
+	public JoinGroup(int cHECK_IN, int mASTER) {
+		super();
+		this.CHECK_IN = cHECK_IN;
+		this.MASTER = mASTER;
 	}
-
+    
 	public int getGP_ID() {
 		return GP_ID;
 	}
@@ -41,16 +52,28 @@ public class JoinGroup {
 		return CHECK_IN;
 	}
 
-	public void setCHECK_IN(int cHECK_NO) {
-		this.CHECK_IN = cHECK_NO;
+	public void setCHECK_IN(int cHECK_in) {
+		this.CHECK_IN = cHECK_in;
 	}
-	
-	public int getGP_ENROLLMENT() {
-		return GP_ENROLLMENT;
+
+
+	public int getMASTER() {
+		return MASTER;
 	}
-	
-	public void setGP_ENROLLMENT(int gP_ENROLLMENT) {
-		this.GP_ENROLLMENT = gP_ENROLLMENT;
+
+
+	public void setMASTER(int mASTER) {
+		MASTER = mASTER;
+	}
+
+
+	public String getMB_NAME() {
+		return MB_NAME;
+	}
+
+
+	public void setMB_NAME(String mB_NAME) {
+		MB_NAME = mB_NAME;
 	}
 	
 

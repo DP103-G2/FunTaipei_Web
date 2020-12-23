@@ -6,7 +6,7 @@ import dp103.gp2.server.group.group.Group;
 
 public interface TravelDetailDao {
 	
-	int insert(TravelDetail traveldetail);
+	int insert(TravelDetail travelDetail);
 	
 	int update(TravelDetail traveldetail);
 	
@@ -16,7 +16,8 @@ public interface TravelDetailDao {
 	
 	List<TravelDetail> getAll();
 
-	int delete(int travel_id);
+
+	int delete(int travel_id, int pc_id);
 
 
 	

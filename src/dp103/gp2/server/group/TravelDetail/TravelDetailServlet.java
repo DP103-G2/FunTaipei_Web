@@ -35,7 +35,6 @@ public class TravelDetailServlet extends HttpServlet{
 				travelDetailDao = new TravelDetailMySql();
 			}
 			String action = jsonObject.get("action").getAsString();
-			
 			if(action.equals("getAll")) {
 				List<TravelDetail> travelDetails = travelDetailDao.getAll();
 				writeText(response, gson.toJson(travelDetails));
@@ -44,11 +43,11 @@ public class TravelDetailServlet extends HttpServlet{
 				int id = jsonObject.get("id").getAsInt();
 				List<TravelDetail> travelDetails = travelDetailDao.findByTravelId(id);
 				writeText(response, gson.toJson(travelDetails));
+				//新增TravelDetail
 			}else if(action.equals("travelDetailInsert") || action.equals("travelDetailUpdate")) {
 				String travelDetailJson = jsonObject.get("travelDetail").getAsString();
 				System.out.println("travelDetailJson = " + travelDetailJson );
-				TravelDetail travelDetail = gson.fromJson(travelDetailJson, TravelDetail.class);
-				
+				TravelDetail travelDetail = gson.fromJson(travelDetailJson,  TravelDetail.class);
 				int count = 0;
 				if(action.equals("travelDetailInsert")) {
 					count = travelDetailDao.insert(travelDetail);
@@ -58,7 +57,8 @@ public class TravelDetailServlet extends HttpServlet{
 				writeText(response, String.valueOf(count));
 			}else if(action.equals("travelDetailDelete")) {
 				int travel_id = jsonObject.get("travel_id").getAsInt();
-				int count = travelDetailDao.delete(travel_id);
+				int pc_id = jsonObject.get("pc_id").getAsInt();
+				int count = travelDetailDao.delete(travel_id, pc_id);
 				writeText(response, String.valueOf(count));
 			}else if(action.equals("findById")){
 				int travel_id = jsonObject.get("travel_id").getAsInt();

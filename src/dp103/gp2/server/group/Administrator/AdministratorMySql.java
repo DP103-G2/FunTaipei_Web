@@ -20,6 +20,38 @@ public class AdministratorMySql implements AdministratorDao {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public boolean login(String AD_NO, String AD_PASSWORD) {
+		boolean isValid = false;
+		String sql = "SELECT AD_PASSWORD from `Administrator` WHERE AD_NO = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, AD_NO);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				isValid = rs.getString(1).equals(AD_PASSWORD);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return isValid;
+	}
 
 	@Override
 	public int insert(Administrator administrator) {
@@ -49,95 +81,95 @@ public class AdministratorMySql implements AdministratorDao {
 		}
 		return count;
 	}
-
-	@Override
-	public int update(Administrator administrator) {
-		int count = 0;
-		String sql = "";
-		sql = "UPDATE Administrator SET AD_NO = ?,AD_PASSWORD = ? WHERE AD_ID = ?;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setString(1, administrator.getAD_NO());
-			ps.setString(2, administrator.getAD_PASSWORD());
-			count = ps.executeUpdate();
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-			if(ps != null) {
-				ps.close();
-			}
-		}catch(SQLException e) {
-			e.printStackTrace();
-			}
-		}
-		return count;
-	}
-
-	@Override
-	public int delete(int AD_ID) {
-		int count = 0;
-		String sql = "DELETE FROM Administrator WHERE AD_ID = ?;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, AD_ID);
-			count = ps.executeUpdate();
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(ps != null) {
-					ps.close();
-				}
-				if(connection != null) {
-					connection.close();
-				}
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return count;
-	}
-
-	@Override
-	public Administrator findById(int AD_ID) {
-		String sql = "SELECT AD_NO,AD_PASSWORD FROM Administrator WHERE AD_ID = ?;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		Administrator administrator = null;
-		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, AD_ID);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				String AD_NO = rs.getString(1);
-				String AD_PASSWORD = rs.getString(2);
-				Administrator administrators = new Administrator(AD_ID, AD_NO, AD_PASSWORD);
-			}
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(ps != null) {
-					ps.close();
-				}
-				if(connection != null) {
-					connection.close();
-				}
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return administrator;
-	}
-
+//
+////	@Override
+////	public int update(Administrator administrator) {
+////		int count = 0;
+////		String sql = "";
+////		sql = "UPDATE Administrator SET AD_NO = ?,AD_PASSWORD = ? WHERE AD_ID = ?;";
+////		Connection connection = null;
+////		PreparedStatement ps = null;
+////		try {
+////			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+////			ps = connection.prepareStatement(sql);
+////			ps.setString(1, administrator.getAD_NO());
+////			ps.setString(2, administrator.getAD_PASSWORD());
+////			count = ps.executeUpdate();
+////		}catch(SQLException e) {
+////			e.printStackTrace();
+////		}finally {
+////			try {
+////			if(ps != null) {
+////				ps.close();
+////			}
+////		}catch(SQLException e) {
+////			e.printStackTrace();
+////			}
+////		}
+////		return count;
+////	}
+//
+//	@Override
+//	public int delete(int AD_ID) {
+//		int count = 0;
+//		String sql = "DELETE FROM Administrator WHERE AD_ID = ?;";
+//		Connection connection = null;
+//		PreparedStatement ps = null;
+//		try {
+//			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+//			ps = connection.prepareStatement(sql);
+//			ps.setInt(1, AD_ID);
+//			count = ps.executeUpdate();
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//		}finally {
+//			try {
+//				if(ps != null) {
+//					ps.close();
+//				}
+//				if(connection != null) {
+//					connection.close();
+//				}
+//			}catch(SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return count;
+//	}
+//
+////	@Override
+////	public Administrator findById(int AD_ID) {
+////		String sql = "SELECT AD_NO,AD_PASSWORD FROM Administrator WHERE AD_ID = ?;";
+////		Connection connection = null;
+////		PreparedStatement ps = null;
+////		Administrator administrator = null;
+////		try {
+////			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+////			ps = connection.prepareStatement(sql);
+////			ps.setInt(1, AD_ID);
+////			ResultSet rs = ps.executeQuery();
+////			if(rs.next()) {
+////				String AD_NO = rs.getString(1);
+////				String AD_PASSWORD = rs.getString(2);
+////				Administrator administrators = new Administrator(AD_ID, AD_NO, AD_PASSWORD);
+////			}
+////		}catch(SQLException e) {
+////			e.printStackTrace();
+////		}finally {
+////			try {
+////				if(ps != null) {
+////					ps.close();
+////				}
+////				if(connection != null) {
+////					connection.close();
+////				}
+////			}catch(SQLException e) {
+////				e.printStackTrace();
+////			}
+////		}
+////		return administrator;
+////	}
+//
 	@Override
 	public List<Administrator> getAll() {
 		String sql = "SELECT AD_ID,AD_NO,AD_PASSWORD FROM FunTaipei.Administrator ORDER BY AD_ID DESC;";

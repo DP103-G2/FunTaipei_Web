@@ -54,6 +54,7 @@ public class TravelServlet extends HttpServlet{
 					response.setContentLength(image.length);
 					os.write(image);
 				}
+				//0221會員管理行程用
 			}else if(action.equals("travelInsert") || action.equals("travelUpdate")) {
 				String travelJson = jsonObject.get("travel").getAsString();
 				System.out.println("travelJson = " + travelJson);
@@ -73,25 +74,38 @@ public class TravelServlet extends HttpServlet{
 					count = travelDao.update(travel, image);
 				}
 				writeText(response,String.valueOf(count));
-			}else if(action.equals("travelDelete")) {
-				int travel_id = jsonObject.get("id").getAsInt();
+				//管理用會員ID搜尋
+			}else if(action.equals("findBymemId")){
+				int memId = jsonObject.get("memId").getAsInt();
+				List<Travel> travels = travelDao.findBymemId(memId);
+				writeText(response, gson.toJson(travels));
+				//用Travel ID刪除
+			} else if(action.equals("travelDelete")) {
+				int travel_id = jsonObject.get("travel_id").getAsInt();
 				int count = travelDao.delete(travel_id);
 				writeText(response,String.valueOf(count));
+				//用ID搜尋Travel
 			}else if(action.equals("findById")) {
 				int id = jsonObject.get("id").getAsInt();
 				Travel travel = travelDao.findById(id);
+				writeText(response,gson.toJson(travel));
+			}else if(action.equals("findByGroup")) {
+				int id = jsonObject.get("id").getAsInt();
+				Travel travel = travelDao.findByGroup(id);
 				writeText(response,gson.toJson(travel));
 			}else {
 				writeText(response,"");
 			}
 		}
+		
 			public void writeText(HttpServletResponse response, String outText) throws IOException{
 				response.setContentType(CONTENT_TYPE);
 				PrintWriter out = response.getWriter();
 				out.print(outText);
-				
 				System.out.println("output" + outText);
 			}
+			
+			
 			public void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException{
 				if(travelDao == null) {
 					travelDao = new TravelDaoMySql();

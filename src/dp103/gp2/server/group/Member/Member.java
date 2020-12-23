@@ -12,7 +12,7 @@ public class Member {
 	private int Mb_status;
 	
 
-	public Member(int mb_no, String mb_email, String mb_password,  String mb_name, String mb_gender,
+	public Member(int mb_no, String mb_email, String mb_password, String mb_name, String mb_gender,
 			Date mb_birthday, int mb_status) {
 		super();
 		Mb_no = mb_no;
@@ -22,8 +22,10 @@ public class Member {
 		Mb_gender = mb_gender;
 		Mb_birthday = mb_birthday;
 		Mb_status = mb_status;
+		
 	}
-
+	
+	
 	public int getMb_no() {
 		return Mb_no;
 	}
@@ -47,7 +49,6 @@ public class Member {
 	public void setMb_password(String mb_password) {
 		Mb_password = mb_password;
 	}
-
 
 	public String getMb_name() {
 		return Mb_name;

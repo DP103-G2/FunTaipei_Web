@@ -12,6 +12,10 @@ public interface TravelDao {
 	
 	Travel findById(int travel_id);
 	
+	Travel findByGroup(int id);
+	
+	List<Travel> findBymemId(int mb_no);
+	
 	List<Travel> getAll();
 	
 	byte[] getImage(int travel_id);

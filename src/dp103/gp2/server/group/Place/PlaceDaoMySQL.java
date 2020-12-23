@@ -29,8 +29,8 @@ public class PlaceDaoMySQL implements PlaceDao {
 	@Override
 	public int insert(Place place, byte[] image) {
 		int count = 0;
-		String sql = "INSERT INTO FunTaipei.Place" + "(PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS) "
-				+ "VALUES(?, ?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO FunTaipei.Place" + "(PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image) "
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -42,6 +42,8 @@ public class PlaceDaoMySQL implements PlaceDao {
 			ps.setDouble(4, place.getLAT());
 			ps.setDouble(5, place.getLNG());
 			ps.setInt(6, place.getVIEW_ALL());
+			ps.setInt(7, place.getPC_STATUS());
+			ps.setBytes(8, image);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,13 +67,17 @@ public class PlaceDaoMySQL implements PlaceDao {
 	@Override
 	public int update(Place place, byte[] image) {
 		int count = 0;
-		String sql = "UPDATE FunTaipei.Place SET PC_NAME = ?, PC_PHONE = ?, PC_ADDRESS = ?, LAT = ?, LNG = ?, VIEW_ALL = ?,PC_STATUS = ?  WHERE id = ?;";
-		
+		String sql = "";
+		if (image != null) {
+			sql = "UPDATE FunTaipei.Place SET PC_NAME = ?, PC_PHONE = ?, PC_ADDRESS = ?, " + "LAT = ?, LNG = ?, VIEW_ALL = ?, PC_STATUS = ?, Image = ? WHERE PC_ID = ?;";
+		}else {
+			sql = "UPDATE FunTaipei.Place SET PC_NAME = ?, PC_PHONE = ?, PC_ADDRESS = ?, " + "LAT = ?, LNG = ?, VIEW_ALL = ?, PC_STATUS = ? WHERE PC_ID = ?;";
+		}
+				
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			ps = connection.prepareStatement(sql);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, place.getPC_NAME());
 			ps.setString(2, place.getPC_PHONE());
@@ -79,6 +85,13 @@ public class PlaceDaoMySQL implements PlaceDao {
 			ps.setDouble(4, place.getLAT());
 			ps.setDouble(5, place.getLNG());
 			ps.setInt(6, place.getVIEW_ALL());
+			ps.setInt(7, place.getPC_STATUS());
+			if (image != null) {
+				ps.setBytes(8, image);
+				ps.setInt(9, place.getPC_ID());
+			} else {
+				ps.setInt(8, place.getPC_ID());
+			}
 			
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -102,7 +115,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	@Override
 	public int delete(int id) {
 		int count = 0;
-		String sql = "DELETE FROM FunTaipei.Place WHERE id = ?;";
+		String sql = "DELETE FROM FunTaipei.Place WHERE PC_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -171,7 +184,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	//(PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS) 
 	@Override
 	public List<Place> getAll() {
-		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place;";
+		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place order by PC_ID desc;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Place> placeList = new ArrayList<Place>();
@@ -213,7 +226,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	
 	@Override
 	public List<Place> getPlace() {
-		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 1;";
+		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 1 order by PC_ID desc;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Place> placeList = new ArrayList<Place>();
@@ -255,7 +268,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	
 	@Override
 	public List<Place> getHotel() {
-		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 2;";
+		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 2 order by PC_ID desc;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Place> placeList = new ArrayList<Place>();
@@ -297,7 +310,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	
 	@Override
 	public List<Place> getRestaurant() {
-		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 3;";
+		String sql = "SELECT PC_id, PC_NAME, PC_PHONE, PC_ADDRESS, LAT, LNG, VIEW_ALL, PC_STATUS, Image FROM  FunTaipei.Place WHERE VIEW_ALL = 3 order by PC_ID DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Place> placeList = new ArrayList<Place>();
@@ -340,7 +353,7 @@ public class PlaceDaoMySQL implements PlaceDao {
 	@Override
 	public byte[] getImage(int id) {
 		
-		String sql =  "SELECT image FROM place WHERE pc_id = ?;";
+		String sql =  "SELECT image FROM place WHERE pc_Id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		byte[] image = null;

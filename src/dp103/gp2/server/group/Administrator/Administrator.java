@@ -30,6 +30,48 @@ public class Administrator {
 		AD_PASSWORD = aD_PASSWORD;
 	}
 	
-	
+//	
+//	private String userName = "";
+//	private String password = "";
+//
+//	public Administrator(String userName, String password) {
+//		super();
+//		this.userName = userName;
+//		this.password = password;
+//	}
+//
+//	
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == null || !(obj instanceof Administrator)) {
+//			return false;
+//		} else {
+//			Administrator adminstrator = (Administrator) obj;
+//			return this.userName.equals(adminstrator.userName);
+//		}
+//	}
+//	
+//	@Override
+//	public int hashCode() {
+//		return userName.hashCode();
+//	}
+//
+//	public String getName() {
+//		return userName;
+//	}
+//
+//	public void setName(String userName) {
+//		this.userName = userName;
+//	}
+//
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
+
+//	
 
 }
